@@ -20,52 +20,62 @@ public class MainActivity extends AppCompatActivity {
     FragmentTransaction transaction;
     Toolbar toolbar;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        fragmentManager = getFragmentManager();
-        fragment = new HomeFragment();
-        transaction = fragmentManager.beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.replace(R.id.main_container, fragment).commit();
+    setupToolbar();
+    setupBottomNavigationView();
+    setupDefaultFragment();
+}
 
-        // Todo: add FrameLayout
-        // Todo: add scroll animation here for toolbar and BNB
-        // Todo: add TypeFace to BNB
-        bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.home);
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.home:
-                                fragment = new HomeFragment();
-                                break;
-                            case R.id.category:
-                                fragment = new CategoryFragment();
-                                break;
-                            case R.id.search:
-                                fragment = new SearchFragment();
-                                break;
-                            case R.id.timeline:
-                                fragment = new TimelineFragment();
-                                break;
-                            case R.id.profile:
-                                fragment = new ProfileFragment();
-                                break;
-                        }
-                        transaction = fragmentManager.beginTransaction();
-                        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        transaction.replace(R.id.main_container, fragment).commit();
-                        return true;
-                    }
-                });
+private void setupToolbar() {
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+}
+
+private void setupBottomNavigationView() {
+    bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+    bottomNavigationView.setSelectedItemId(R.id.home);
+    bottomNavigationView.setOnNavigationItemSelectedListener(this);
+}
+
+private void setupDefaultFragment() {
+    fragmentManager = getSupportFragmentManager(); // Use getSupportFragmentManager for compatibility
+    fragment = new HomeFragment();
+    transaction = fragmentManager.beginTransaction();
+    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+    transaction.replace(R.id.main_container, fragment).commit();
+}
+
+@Override
+public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    switch (item.getItemId()) {
+        case R.id.home:
+            fragment = new HomeFragment();
+            break;
+        case R.id.category:
+            fragment = new CategoryFragment();
+            break;
+        case R.id.search:
+            fragment = new SearchFragment();
+            break;
+        case R.id.timeline:
+            fragment = new TimelineFragment();
+            break;
+        case R.id.profile:
+            fragment = new ProfileFragment();
+            break;
     }
+    updateFragment(fragment);
+    return true;
+}
+
+private void updateFragment(Fragment newFragment) {
+    transaction = fragmentManager.beginTransaction();
+    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+    transaction.replace(R.id.main_container, newFragment).commit();
+}
 
 }
