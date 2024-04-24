@@ -36,27 +36,34 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
     }
 
-    public void CategoryListAdapter(List<Category> categories, int layoutId, Context context) {
-        state = State.CATEGORY;
-        this.categories = categories;
-        this.layoutId = layoutId;
-        this.context = context;
+    private void initializeAdapter(State state, List<?> dataList, int layoutId, Context context) {
+    this.state = state;
+    this.data = dataList;
+    switch (state) {
+      case CATEGORY:
+        categories = (List<Category>) dataList;
+        break;
+      case BOOK:
+        books = (List<Book>) dataList;
+        break;
+      case MINIITEM:
+        miniItems = (List<MiniItem>) dataList;
     }
+    this.layoutId = layoutId;
+    this.context = context;
+  }
 
+  public void CategoryListAdapter(List<Category> categories, int layoutId, Context context) {
+    initializeAdapter(State.CATEGORY, categories, layoutId, context);
+  }
 
-    public void MiniItemListAdapter(List<MiniItem> miniItems, int layoutId, Context context) {
-        state = State.MINIITEM;
-        this.miniItems = miniItems;
-        this.layoutId = layoutId;
-        this.context = context;
-    }
+  public void MiniItemListAdapter(List<MiniItem> miniItems, int layoutId, Context context) {
+    initializeAdapter(State.MINIITEM, miniItems, layoutId, context);
+  }
 
-    public void BookListAdapter(List<Book> books, int layoutId, Context context) {
-        state = State.BOOK;
-        this.books = books;
-        this.layoutId = layoutId;
-        this.context = context;
-    }
+  public void BookListAdapter(List<Book> books, int layoutId, Context context) {
+    initializeAdapter(State.BOOK, books, layoutId, context);
+  }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
